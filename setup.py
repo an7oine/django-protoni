@@ -1,0 +1,16 @@
+# -* - coding: utf-8 -*-
+
+from setuptools import setup, find_packages
+
+setup(
+  setup_requires='git-versiointi',
+  name='django-protoni',
+  packages=find_packages(),
+  include_package_data=True,
+  scripts=['manage.py'],
+  install_requires=['Django', 'python-decouple'],
+  entry_points={'django.asetukset': [
+    'heroku = protoni.laajennos.heroku',
+    'dj_database_url = protoni.laajennos.dj_database_url',
+  ]},
+)
