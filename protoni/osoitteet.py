@@ -38,6 +38,6 @@ for entry_point in pkg_resources.iter_entry_points('django.osoitteet'):
   urlpatterns.append(
     path(
       entry_point.name + '/',
-      include(entry_point.module_name),
+      include((entry_point.module_name, entry_point.name)),
     )
   )
