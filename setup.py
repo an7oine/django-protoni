@@ -10,7 +10,8 @@ setup(
   scripts=['manage.py'],
   install_requires=['Django', 'python-decouple'],
   entry_points={'django.asetukset': [
-    'heroku = protoni.laajennos.heroku',
+    'celery = protoni.laajennos.celery',
     'dj_database_url = protoni.laajennos.dj_database_url',
+    'heroku = protoni.laajennos.heroku',
   ]},
 )
