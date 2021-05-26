@@ -108,12 +108,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = CONFIG(
-  'STATIC_ROOT', default=os.path.join(BASE_DIR, 'staticfiles')
+  'STATIC_ROOT',
+  default=os.path.join('/', 'tmp', 'protoni', 'static')
 )
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = CONFIG(
-  'MEDIA_ROOT', default=os.path.join(BASE_DIR, 'media')
+  'MEDIA_ROOT',
+  default=os.path.join('/', 'tmp', 'protoni', 'media')
 )
 
 LOGIN_REDIRECT_URL = '/'
