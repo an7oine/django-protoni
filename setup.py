@@ -13,5 +13,6 @@ setup(
     'celery = protoni.laajennos.celery',
     'dj_database_url = protoni.laajennos.dj_database_url',
     'heroku = protoni.laajennos.heroku',
+    'pipeline = protoni.laajennos.pipeline',
   ]},
 )
