@@ -6,6 +6,7 @@ setup(
   setup_requires='git-versiointi',
   name='django-protoni',
   packages=find_packages(),
+  py_modules=['manage'],
   include_package_data=True,
   scripts=['manage.py'],
   install_requires=['Django', 'python-decouple'],
