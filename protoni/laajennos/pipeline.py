@@ -44,8 +44,9 @@ except UndefinedValueError:
 
 # Poista JS- ja CSS-lähdekoodi paketoinnin jälkeen.
 def poista_lahdekoodi(sender, *, package, **kwargs):
-  for lahde in package.sources:
-    sender.compressor.storage.delete(lahde)
+  if PIPELINE.get('PIPELINE_ENABLED'):
+    for lahde in package.sources:
+      sender.compressor.storage.delete(lahde)
 css_compressed.connect(poista_lahdekoodi)
 js_compressed.connect(poista_lahdekoodi)
 
