@@ -26,14 +26,21 @@ STATICFILES_FINDERS.append(
 )
 
 PIPELINE = {
-  #'PIPELINE_ENABLED': True,
-
   'JAVASCRIPT': {},
   'STYLESHEETS': {},
 
   'CSS_COMPRESSOR': 'pipeline.compressors.csshtmljsminify.CssHtmlJsMinifyCompressor',
   'JS_COMPRESSOR': 'pipeline.compressors.csshtmljsminify.CssHtmlJsMinifyCompressor',
 }
+
+try:
+  PIPELINE['PIPELINE_ENABLED'] = CONFIG(
+    'PIPELINE_ENABLED',
+    cast=bool,
+  )
+except UndefinedValueError:
+  pass
+
 
 # Poista JS- ja CSS-lähdekoodi paketoinnin jälkeen.
 def poista_lahdekoodi(sender, *, package, **kwargs):
