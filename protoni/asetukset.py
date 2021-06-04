@@ -97,6 +97,8 @@ TEMPLATES = [
   },
 ]
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 ROOT_URLCONF = 'protoni.osoitteet'
 WSGI_APPLICATION = 'protoni.wsgi.application'
 
