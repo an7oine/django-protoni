@@ -3,6 +3,7 @@
 import importlib
 import os
 from pathlib import Path
+import warnings
 
 import pkg_resources
 
@@ -201,9 +202,9 @@ for entry_point in pkg_resources.iter_entry_points('django.sovellus'):
 for entry_point in pkg_resources.iter_entry_points('django.asetukset'):
   spec = importlib.util.find_spec(entry_point.module_name)
   if spec is None:
-    print(f'Virheellinen laajennos: {entry_point!r}')
+    warnings.warn(f'Virheellinen laajennos: {entry_point!r}')
     continue
-  with open(spec.origin) as laajennos_mod:
+  with open(spec.origin, encoding='utf-8') as laajennos_mod:
     # pylint: disable=exec-used
     try: exec(compile(laajennos_mod.read(), spec.origin, 'exec'))
     except ImportError: pass
