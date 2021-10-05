@@ -71,20 +71,36 @@ else:
   }.get(DATABASES['default']['ENGINE'], lambda: {})())
 
 INSTALLED_APPS = [
-  'django.contrib.admin',
-  'django.contrib.auth',
-  'django.contrib.contenttypes',
-  'django.contrib.sessions',
-  'django.contrib.messages',
-  'django.contrib.staticfiles',
+  f'django.contrib.{sovellus}'
+  for sovellus in (
+    'admin',
+    'auth',
+    'contenttypes',
+    'sessions',
+    'messages',
+    'staticfiles',
+    'humanize',
+  )
+  if sovellus in CONFIG(
+    'DJANGO_SOVELLUKSET',
+    cast=lambda x: x.split(','),
+    default='',
+  )
 ]
 MIDDLEWARE = [
   'django.middleware.security.SecurityMiddleware',
-  'django.contrib.sessions.middleware.SessionMiddleware',
+  *((
+    'django.contrib.sessions.middleware.SessionMiddleware',
+  ) if 'django.contrib.sessions' in INSTALLED_APPS else ()),
+  'django.middleware.locale.LocaleMiddleware',
   'django.middleware.common.CommonMiddleware',
   'django.middleware.csrf.CsrfViewMiddleware',
-  'django.contrib.auth.middleware.AuthenticationMiddleware',
-  'django.contrib.messages.middleware.MessageMiddleware',
+  *((
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+  ) if 'django.contrib.auth' in INSTALLED_APPS else ()),
+  *((
+    'django.contrib.messages.middleware.MessageMiddleware',
+  ) if 'django.contrib.messages' in INSTALLED_APPS else ()),
   'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 TEMPLATES = [
@@ -96,8 +112,12 @@ TEMPLATES = [
       'context_processors': [
         'django.template.context_processors.debug',
         'django.template.context_processors.request',
-        'django.contrib.auth.context_processors.auth',
-        'django.contrib.messages.context_processors.messages',
+        *((
+          'django.contrib.auth.context_processors.auth',
+        ) if 'django.contrib.auth' in INSTALLED_APPS else ()),
+        *((
+          'django.contrib.messages.context_processors.messages',
+        ) if 'django.contrib.messages' in INSTALLED_APPS else ()),
       ],
     },
   },
@@ -112,7 +132,7 @@ LANGUAGE_CODE = 'fi-fi'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
-USE_TZ = True
+USE_TZ = CONFIG('USE_TZ', cast=bool, default=True)
 
 STATIC_URL = '/static/'
 STATIC_ROOT = CONFIG(
