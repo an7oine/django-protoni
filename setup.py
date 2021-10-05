@@ -21,6 +21,7 @@ setup(
       'debug_toolbar = protoni.laajennos.debug_toolbar',
       'dj_database_url = protoni.laajennos.dj_database_url',
       'heroku = protoni.laajennos.heroku',
+      'hosts = protoni.laajennos.hosts',
       'pipeline = protoni.laajennos.pipeline',
     ],
   },
