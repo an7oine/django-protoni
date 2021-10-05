@@ -10,10 +10,16 @@ setup(
   include_package_data=True,
   scripts=['manage.py'],
   install_requires=['Django', 'python-decouple'],
-  entry_points={'django.asetukset': [
-    'celery = protoni.laajennos.celery',
-    'dj_database_url = protoni.laajennos.dj_database_url',
-    'heroku = protoni.laajennos.heroku',
-    'pipeline = protoni.laajennos.pipeline',
-  ]},
+  entry_points={
+    'django.nakymat': [
+      'kirjaudu = protoni.nakymat:Kirjautuminen',
+      'kanta = protoni.nakymat:Kanta',
+    ],
+    'django.asetukset': [
+      'celery = protoni.laajennos.celery',
+      'dj_database_url = protoni.laajennos.dj_database_url',
+      'heroku = protoni.laajennos.heroku',
+      'pipeline = protoni.laajennos.pipeline',
+    ],
+  },
 )
