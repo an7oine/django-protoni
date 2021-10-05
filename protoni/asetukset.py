@@ -26,43 +26,49 @@ AUTH_PASSWORD_VALIDATORS = [
   {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
   {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
-DATABASES = {
-  'default': {
-    'ENGINE': CONFIG('DB_ENGINE', default='django.db.backends.sqlite3'),
-  }
-}
 
-DATABASES['default'].update({
-  'django.db.backends.sqlite3': lambda: {
-    'NAME': CONFIG('DB_NAME', default=os.path.join(BASE_DIR, 'db.sqlite3')),
-  },
-  'django.db.backends.mysql': lambda: {
-    'HOST': CONFIG('DB_HOST', default='127.0.0.1'),
-    'PORT': CONFIG('DB_PORT', default=3306, cast=int),
-    'NAME': CONFIG('DB_NAME'),
-    'USER': CONFIG('DB_USER'),
-    'PASSWORD': CONFIG('DB_PASSWORD', default=''),
-    'OPTIONS': {
-      'sql_mode': 'TRADITIONAL',
-      'charset': 'utf8',
-      'init_command':
-        'SET '
-        'sql_mode=STRICT_TRANS_TABLES,'
-        'storage_engine=INNODB,'
-        'character_set_connection=utf8,'
-        'character_set_database=utf8,'
-        'character_set_server=utf8,'
-        'collation_connection=utf8_general_ci'
+try:
+  DATABASES = {
+    'default': {
+      'ENGINE': CONFIG('DB_ENGINE'),
+    }
+  }
+
+except UndefinedValueError:
+  pass
+
+else:
+  DATABASES['default'].update({
+    'django.db.backends.sqlite3': lambda: {
+      'NAME': CONFIG('DB_NAME', default=os.path.join(BASE_DIR, 'db.sqlite3')),
     },
-  },
-  'django.db.backends.postgresql': lambda: {
-    'HOST': CONFIG('DB_HOST', default='127.0.0.1'),
-    'PORT': CONFIG('DB_PORT', default=5432, cast=int),
-    'NAME': CONFIG('DB_NAME'),
-    'USER': CONFIG('DB_USER'),
-    'PASSWORD': CONFIG('DB_PASSWORD', default=''),
-  },
-}.get(DATABASES['default']['ENGINE'], lambda: {})())
+    'django.db.backends.mysql': lambda: {
+      'HOST': CONFIG('DB_HOST', default='127.0.0.1'),
+      'PORT': CONFIG('DB_PORT', default=3306, cast=int),
+      'NAME': CONFIG('DB_NAME'),
+      'USER': CONFIG('DB_USER'),
+      'PASSWORD': CONFIG('DB_PASSWORD', default=''),
+      'OPTIONS': {
+        'sql_mode': 'TRADITIONAL',
+        'charset': 'utf8',
+        'init_command':
+          'SET '
+          'sql_mode=STRICT_TRANS_TABLES,'
+          'storage_engine=INNODB,'
+          'character_set_connection=utf8,'
+          'character_set_database=utf8,'
+          'character_set_server=utf8,'
+          'collation_connection=utf8_general_ci'
+      },
+    },
+    'django.db.backends.postgresql': lambda: {
+      'HOST': CONFIG('DB_HOST', default='127.0.0.1'),
+      'PORT': CONFIG('DB_PORT', default=5432, cast=int),
+      'NAME': CONFIG('DB_NAME'),
+      'USER': CONFIG('DB_USER'),
+      'PASSWORD': CONFIG('DB_PASSWORD', default=''),
+    },
+  }.get(DATABASES['default']['ENGINE'], lambda: {})())
 
 INSTALLED_APPS = [
   'django.contrib.admin',
