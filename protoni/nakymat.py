@@ -33,3 +33,13 @@ if 'django.contrib.admin' in settings.INSTALLED_APPS:
   from django.contrib import admin
   class Kanta:
     urlpatterns = [path('', admin.site.urls)]
+
+
+if 'debug_toolbar' in settings.INSTALLED_APPS:
+  class DebugToolbar:
+    # Käännetään debug_toolbar-paketin osoitteisto 'djdt`-nimiavaruuteen.
+    osoitteet = include('debug_toolbar.toolbar', namespace='')
+    app_name = 'djdt'
+    urlpatterns = [
+      path('', (osoitteet[0], None, None)),
+    ]
