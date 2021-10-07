@@ -15,8 +15,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Asetusparametrit.
 CONFIG = AutoConfig(search_path=os.getenv('PROTONI', BASE_DIR.parent))
 
-# Portti, jossa `manage.py runserver`-palvelinta ajetaan oletuksena.
-RUNSERVER = CONFIG('RUNSERVER', cast=int, default=8000)
+# IP-osoite ja portti, jossa `manage.py runserver`-palvelinta ajetaan.
+# Oletus 127.0.0.1, 8000.
+# Osoite ja portti poimitaan pilkulla eroteltuina.
+# Mikäli vain toinen on annettu, tulkitaan numeerinen arvo portin
+# numeroksi ja muu arvo IP-osoitteeksi.
+RUNSERVER = CONFIG(
+  'RUNSERVER',
+  cast=lambda x: (
+    # pylint: disable=undefined-variable
+    (h_p[0], int(h_p[1])) if ',' in x and (h_p := x.split(','))
+    else ('127.0.0.1', int(x)) if x.isdecimal()
+    else (x, 8000) if x
+    else ('127.0.0.1', 8000)
+  ),
+  default=None,
+)
 
 # Oletusasetukset.
 AUTH_PASSWORD_VALIDATORS = [
