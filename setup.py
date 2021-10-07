@@ -24,6 +24,7 @@ setup(
       'heroku = protoni.laajennos.heroku',
       'hosts = protoni.laajennos.hosts',
       'pipeline = protoni.laajennos.pipeline',
+      'whitenoise = protoni.laajennos.whitenoise',
     ],
   },
 )
