@@ -24,10 +24,10 @@ RUNSERVER = CONFIG(
   'RUNSERVER',
   cast=lambda x: (
     # pylint: disable=undefined-variable
-    (h_p[0], int(h_p[1])) if ',' in x and (h_p := x.split(','))
+    ('127.0.0.1', 8000) if not x
+    else (h_p[0], int(h_p[1])) if ',' in x and (h_p := x.split(','))
     else ('127.0.0.1', int(x)) if x.isdecimal()
-    else (x, 8000) if x
-    else ('127.0.0.1', 8000)
+    else (x, 8000)
   ),
   default=None,
 )
