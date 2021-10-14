@@ -41,7 +41,7 @@ for entry_point in pkg_resources.iter_entry_points('django.nakymat'):
 
 
 # Lisää asennetut osoitteistot.
-for entry_point in pkg_resources.iter_entry_points('django.osoitteet'):
+for entry_point in pkg_resources.iter_entry_points('django.osoitteisto'):
   urlpatterns.append(
     path(
       entry_point.name + '/',
