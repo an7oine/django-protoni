@@ -30,3 +30,12 @@ EMAIL_FILE_PATH = CONFIG('EMAIL_FILE_PATH', default=(
 ))
 EMAIL_HOST = CONFIG('EMAIL_HOST', default='localhost')
 EMAIL_PORT = CONFIG('EMAIL_PORT', default=25, cast=int)
+
+# Käytetään tiivistettä staattisten tiedostojen nimissä,
+# mikäli asetus on vakioarvossa.
+try:
+  STATICFILES_STORAGE
+except NameError:
+  STATICFILES_STORAGE = (
+    'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+  )
