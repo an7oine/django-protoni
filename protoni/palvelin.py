@@ -5,9 +5,10 @@ from .asetukset import *
 
 SECRET_KEY = CONFIG('SECRET_KEY', default='subatominen-hiukkanen')
 
-ALLOWED_HOSTS = CONFIG('ALLOWED_HOSTS', cast=lambda v: [
-  s.strip() for s in v.split(',')
-], default='')
+ALLOWED_HOSTS = CONFIG(
+  'ALLOWED_HOSTS',
+  cast=lambda x: list(map(str.strip, x.split(','))),
+)
 
 DEBUG = CONFIG("DEBUG", cast=bool, default=False)
 
