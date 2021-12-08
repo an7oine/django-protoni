@@ -66,14 +66,16 @@ else:
       'OPTIONS': {
         'sql_mode': 'TRADITIONAL',
         'charset': 'utf8',
-        'init_command':
+        'init_command': (
           'SET '
+          'NAMES "utf8", '
           'sql_mode=STRICT_TRANS_TABLES,'
-          'storage_engine=INNODB,'
+          'default_storage_engine=INNODB,'
           'character_set_connection=utf8,'
           'character_set_database=utf8,'
           'character_set_server=utf8,'
-          'collation_connection=utf8_general_ci'
+          'collation_connection=utf8_swedish_ci'
+        ),
       },
     },
     'django.db.backends.postgresql': lambda: {
