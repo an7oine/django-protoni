@@ -6,8 +6,11 @@ Sentry-SDK-käyttöönotto. Edellyttää seuraavien muuttujien määrityksen:
 - SENTRY_PAKETTIVERSIO: sen Pip-paketin nimi, jonka versionumero
   ilmoitetaan Sentrylle.
 '''
+import logging
+
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration
 
 # Poimi DSN-yhteysosoite.
 try:
@@ -33,13 +36,29 @@ finally:
   del paketti
   del PackageNotFoundError, version
 
+# Asetetaan Sentry ohittamaan SSL-varmenteen tarkistus,
+# mikäli tätä vastaava parametri on asetettu.
+if CONFIG('SENTRY_OHITA_VARMENNE', cast=bool, default=False):
+  sentry_sdk.transport.HttpTransport._get_pool_options \
+  = lambda self, ca_certs: {
+    'num_pools': 2,
+    'cert_reqs': 'CERT_NONE',
+  }
+
 # Alusta Sentry-määritys.
 # Ks. https://docs.sentry.io/platforms/python/guides/django/
 sentry_sdk.init(
   dsn=dsn,
   release=versio,
-  integrations=[DjangoIntegration()],
+  integrations=[
+    LoggingIntegration(
+      level=logging.INFO,
+      event_level=logging.WARNING,
+    ),
+    DjangoIntegration(),
+  ],
   send_default_pii=True,
 )
-del sentry_sdk, DjangoIntegration
+del logging
+del sentry_sdk, DjangoIntegration, LoggingIntegration
 del dsn, versio
