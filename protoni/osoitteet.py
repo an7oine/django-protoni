@@ -1,20 +1,19 @@
 # -*- coding: utf-8 -*-
 
 from django.conf import settings
-from django import forms
-from django.shortcuts import redirect
 from django.urls import path, include
-from django.views.generic import View
+from django.views.generic import RedirectView
 import pkg_resources
 
 
-class Index(View):
-  def get(self, request):
+class Index(RedirectView):
+  def get_redirect_url(self, *args, **kwargs):
     if 'django.contrib.auth' in settings.INSTALLED_APPS \
-    and not request.user.is_authenticated:
-      return redirect(settings.LOGIN_URL)
+    and not self.request.user.is_authenticated:
+      return settings.LOGIN_URL
     else:
-      return redirect(settings.LOGIN_REDIRECT_URL)
+      return settings.LOGIN_REDIRECT_URL
+    # def get_redirect_url
   # class Index
 
 
