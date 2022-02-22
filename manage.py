@@ -29,7 +29,11 @@ def main():
 
   django.setup()
   from django.core.management.commands.runserver import Command
-  Command.default_addr, Command.default_port = django.conf.settings.RUNSERVER
+  Command.default_addr, Command.default_port = getattr(
+    django.conf.settings,
+    'RUNSERVER',
+    ('127.0.0.1', 8000)
+  )
   from django.core.management import execute_from_command_line
   execute_from_command_line(sys.argv)
 
