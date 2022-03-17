@@ -29,7 +29,6 @@ for entry_point in pkg_resources.iter_entry_points(
 
 # Luo projektiosoitteiston (`osoitteet.py`) mukainen oletuspalvelin.
 palvelimet = [
-  host(r'', settings.ROOT_URLCONF, name='<oletus>'),
 ]
 
 # Käy kukin rekisteröity palvelinnimiavaruus läpi.
@@ -64,5 +63,10 @@ for entry_point in pkg_resources.iter_entry_points('django.palvelin'):
   # osoitteiston edellä asetetusta luettelosta.
   palvelimet.append(host(rf'^(.*[.])?{nimi}[.].*', moduuli, name=nimi))
   # for entry_point in pkg_resources.iter_entry_points
+
+if not any(palvelin.name == '<oletus>' for palvelin in palvelimet):
+  palvelimet.append(
+    host(r'', settings.ROOT_URLCONF, name='<oletus>'),
+  )
 
 host_patterns = patterns('', *palvelimet)
