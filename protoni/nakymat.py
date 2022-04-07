@@ -38,7 +38,7 @@ if 'django.contrib.admin' in settings.INSTALLED_APPS:
 if 'debug_toolbar' in settings.INSTALLED_APPS:
   class DebugToolbar:
     # Käännetään debug_toolbar-paketin osoitteisto 'djdt`-nimiavaruuteen.
-    osoitteet = include('debug_toolbar.toolbar', namespace='')
+    osoitteet = include('debug_toolbar.urls', namespace='')
     app_name = 'djdt'
     urlpatterns = [
       path('', (osoitteet[0], None, None)),
