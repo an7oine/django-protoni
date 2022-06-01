@@ -2,6 +2,7 @@
 
 from django.conf import settings
 from django import forms
+from django.shortcuts import redirect
 from django.urls import include, path
 
 
@@ -10,6 +11,11 @@ if 'django.contrib.auth' in settings.INSTALLED_APPS:
   class Sisaankirjautumislomake(LoginView.form_class):
     tallenna_istunto = forms.BooleanField(required=False)
   class Sisaankirjautumisnakyma(LoginView):
+    def form_invalid(self, form):
+      if referer := self.request.headers.get('Referer'):
+        return redirect(referer)
+      return super().form_invalid(form)
+      # def form_invalid
     def form_valid(self, form):
       paluu = super().form_valid(form)
       if not form.cleaned_data.get('tallenna_istunto', False):
