@@ -113,6 +113,17 @@ MIDDLEWARE = [
   ) if 'django.contrib.messages' in INSTALLED_APPS else ()),
   'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# Käytetään istuntojen tallennukseen tietokantaa, mikäli se on
+# määritetty ja muutoin evästeitä.
+SESSION_ENGINE = CONFIG(
+  'SESSION_ENGINE',
+  default=(
+    'django.contrib.sessions.backends.db' if 'DATABASES' in locals()
+    else 'django.contrib.sessions.backends.signed_cookies'
+  )
+)
+
 TEMPLATES = [
   {
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
