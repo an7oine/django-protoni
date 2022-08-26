@@ -152,7 +152,6 @@ WSGI_APPLICATION = 'protoni.wsgi.application'
 LANGUAGE_CODE = 'fi-fi'
 TIME_ZONE = 'UTC'
 USE_I18N = True
-USE_L10N = True
 USE_TZ = CONFIG('USE_TZ', cast=bool, default=True)
 
 STATIC_URL = '/static/'
