@@ -32,6 +32,17 @@ RUNSERVER = CONFIG(
   default=None,
 )
 
+# SSL-avain- ja -varmennetiedosto, joita käytetään https-kehityspalvelimen
+# suojaamiseen.
+RUNSERVER_SSL_KEYFILE=CONFIG(
+  'RUNSERVER_SSL_KEYFILE',
+  default=None,
+)
+RUNSERVER_SSL_CERTFILE=CONFIG(
+  'RUNSERVER_SSL_CERTFILE',
+  default=None,
+)
+
 # Oletusasetukset.
 AUTH_PASSWORD_VALIDATORS = []
 

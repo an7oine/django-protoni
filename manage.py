@@ -34,6 +34,16 @@ def main():
     'RUNSERVER',
     ('127.0.0.1', 8000)
   )
+  Command.oletus_ssl_keyfile = getattr(
+    django.conf.settings,
+    'RUNSERVER_SSL_KEYFILE',
+    None
+  )
+  Command.oletus_ssl_certfile = getattr(
+    django.conf.settings,
+    'RUNSERVER_SSL_CERTFILE',
+    None
+  )
   from django.core.management import execute_from_command_line
   execute_from_command_line(sys.argv)
 
