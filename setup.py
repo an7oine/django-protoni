@@ -18,6 +18,7 @@ setup(
     ],
     'django.asetukset': [
       'celery = protoni.laajennos.celery',
+      'corsheaders = protoni.laajennos.corsheaders',
       'debug_toolbar = protoni.laajennos.debug_toolbar',
       'dj_database_url = protoni.laajennos.dj_database_url',
       'extensions = protoni.laajennos.extensions',
