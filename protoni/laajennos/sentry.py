@@ -57,7 +57,11 @@ sentry_sdk.init(
     ),
     DjangoIntegration(),
   ],
-  send_default_pii=True,
+  send_default_pii=CONFIG(
+    'SENTRY_SEND_DEFAULT_PII',
+    cast=bool,
+    default=False,
+  ),
 )
 del logging
 del sentry_sdk, DjangoIntegration, LoggingIntegration
