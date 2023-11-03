@@ -164,7 +164,7 @@ ROOT_URLCONF = 'protoni.osoitteet'
 WSGI_APPLICATION = 'protoni.wsgi.application'
 
 LANGUAGE_CODE = 'fi-fi'
-TIME_ZONE = 'UTC'
+TIME_ZONE = CONFIG('TIME_ZONE', default='UTC')
 USE_I18N = True
 USE_TZ = CONFIG('USE_TZ', cast=bool, default=True)
 
