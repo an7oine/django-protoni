@@ -92,21 +92,24 @@ else:
   }.get(DATABASES['default']['ENGINE'], lambda: {})())
 
 INSTALLED_APPS = [
-  f'django.contrib.{sovellus}'
-  for sovellus in (
-    'admin',
-    'auth',
-    'contenttypes',
-    'sessions',
-    'messages',
-    'staticfiles',
-    'humanize',
-  )
-  if sovellus in CONFIG(
-    'DJANGO_SOVELLUKSET',
-    cast=lambda x: x.split(','),
-    default='',
-  )
+  *(
+    f'django.contrib.{sovellus}'
+    for sovellus in (
+      'admin',
+      'auth',
+      'contenttypes',
+      'sessions',
+      'messages',
+      'staticfiles',
+      'humanize',
+    )
+    if sovellus in CONFIG(
+      'DJANGO_SOVELLUKSET',
+      cast=lambda x: x.split(','),
+      default='',
+    )
+  ),
+  'django.forms',
 ]
 MIDDLEWARE = [
   'django.middleware.security.SecurityMiddleware',
