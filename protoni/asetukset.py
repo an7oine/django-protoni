@@ -184,7 +184,7 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 # Sisäänkirjautumisosoite.
-LOGIN_URL = 'kirjaudu-sisaan'
+LOGIN_URL = '/kirjaudu/sisaan/'
 
 
 LOGGING = {
