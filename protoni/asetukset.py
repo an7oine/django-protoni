@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import importlib
+from importlib.metadata import entry_points
 import os
 from pathlib import Path
+from sys import version_info
 import warnings
-
-import pkg_resources
 
 from decouple import AutoConfig, UndefinedValueError
 
@@ -224,15 +224,23 @@ LOGGING = {
 }
 
 
+_entry_points = (
+  # Ks. https://docs.python.org/3/library/importlib.metadata.html#entry-points.
+  entry_points
+  if version_info >= (3, 10)
+  else lambda *, group: entry_points().get(group, ())
+)
+
 # Lataa asennetut sovellukset.
-for entry_point in pkg_resources.iter_entry_points('django.sovellus'):
-  INSTALLED_APPS.append(entry_point.module_name)
+for entry_point in _entry_points(group='django.sovellus'):
+  INSTALLED_APPS.append(entry_point.value)
 
 
 # Lataa asennetut asetuslaajennokset.
-for entry_point in pkg_resources.iter_entry_points('django.asetukset'):
-  spec = importlib.util.find_spec(entry_point.module_name)
+for entry_point in _entry_points(group='django.asetukset'):
+  spec = importlib.util.find_spec(entry_point.value)
   if spec is None:
+    entry_point.load()
     warnings.warn(f'Virheellinen laajennos: {entry_point!r}')
     continue
   with open(spec.origin, encoding='utf-8') as laajennos_mod:
