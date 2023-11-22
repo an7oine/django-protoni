@@ -9,7 +9,7 @@ setup(
   py_modules=['manage'],
   include_package_data=True,
   scripts=['manage.py'],
-  install_requires=['Django', 'python-decouple'],
+  install_requires=['Django', 'python-decouple-multi'],
   entry_points={
     'django.nakymat': [
       '__debug__ = protoni.nakymat:DebugToolbar',

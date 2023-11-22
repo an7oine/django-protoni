@@ -5,15 +5,45 @@ from importlib.metadata import entry_points
 import os
 from pathlib import Path
 from sys import version_info
+import sysconfig
 import warnings
 
-from decouple import AutoConfig, UndefinedValueError
+from decouple_multi import AutoConfig, UndefinedValueError
+
+
+_entry_points = (
+  # Ks. https://docs.python.org/3/library/importlib.metadata.html#entry-points.
+  entry_points
+  if version_info >= (3, 10)
+  else lambda *, group: entry_points().get(group, ())
+)
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Asetusparametrit.
-CONFIG = AutoConfig(search_path=os.getenv('PROTONI', BASE_DIR.parent))
+CONFIG = AutoConfig(
+  search_path=tuple(filter(None, (
+    # Ympäristössä määritetty hakemisto.
+    # Tunnistetaan myös mahdollinen `ENV_POLKU`-muuttuja.
+    os.getenv('PROTONI', None) or os.getenv('ENV_POLKU', None),
+    # Käytetään toissijaisesti nykyistä työhakemistoa.
+    Path().resolve(),
+    # Kolmannella sijalla käytetään asennettujen pakettien
+    # määrittelemiä `decouple.asetukset`-hakemistoja.
+    *(
+      entry_point.dist.locate_file(
+        entry_point.value
+      )
+      for entry_point in _entry_points(
+        group='decouple.asetukset'
+      )
+    ),
+    # Huomaa, että `decouple` käyttää näiden lisäksi viimekätisenä
+    # hakemistona käsillä olevan moduulin (__file__) sisältävää polkua.
+  ))),
+)
 
 # IP-osoite ja portti, jossa `manage.py runserver`-palvelinta ajetaan.
 # Oletus 127.0.0.1, 8000.
@@ -226,13 +256,6 @@ LOGGING = {
   }
 }
 
-
-_entry_points = (
-  # Ks. https://docs.python.org/3/library/importlib.metadata.html#entry-points.
-  entry_points
-  if version_info >= (3, 10)
-  else lambda *, group: entry_points().get(group, ())
-)
 
 # Lataa asennetut sovellukset.
 for entry_point in _entry_points(group='django.sovellus'):
