@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import importlib
-from importlib.metadata import entry_points
 import os
 from pathlib import Path
 from sys import version_info
@@ -10,12 +9,30 @@ import warnings
 from decouple_multi import AutoConfig, UndefinedValueError
 
 
-_entry_points = (
+# Käytetään yhtenäistä entry_point-toteutusta, vaikka Python 3.9 ja 3.10
+# eroavat tältä osin toisistaan.
+if version_info >= (3, 10):
+  from importlib.metadata import entry_points
+  def ep_hakemisto(ep):
+    # Huomaa, että `entry_point`-standardi ei hyväksy vinoviivoja
+    # osana liitospistettä. Korvataan mahdolliset pisteet viivoilla.
+    return ep.dist.locate_file(ep.value.replace('.', '/'))
+
+else:
   # Ks. https://docs.python.org/3/library/importlib.metadata.html#entry-points.
-  entry_points
-  if version_info >= (3, 10)
-  else lambda *, group: entry_points().get(group, ())
-)
+  from importlib.metadata import entry_points as _entry_points
+  def entry_points(*, group):
+    return _entry_points().get(group, ())
+  def ep_hakemisto(ep):
+    from importlib.metadata import distributions
+    ep_value = ep.value.replace('.', '/')
+    for distribution in distributions():
+      if (hakemisto := distribution.locate_file(ep_value)).exists():
+        return hakemisto
+    else:
+      raise ValueError(f'Tiedostoa ei löydetty: {ep.value}')
+
+  # else (Python < 3.10)
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -32,10 +49,8 @@ CONFIG = AutoConfig(
     # Kolmannella sijalla käytetään asennettujen pakettien
     # määrittelemiä `decouple.asetukset`-hakemistoja.
     *(
-      entry_point.dist.locate_file(
-        entry_point.value
-      )
-      for entry_point in _entry_points(
+      ep_hakemisto(entry_point)
+      for entry_point in entry_points(
         group='decouple.asetukset'
       )
     ),
@@ -257,12 +272,12 @@ LOGGING = {
 
 
 # Lataa asennetut sovellukset.
-for entry_point in _entry_points(group='django.sovellus'):
+for entry_point in entry_points(group='django.sovellus'):
   INSTALLED_APPS.append(entry_point.value)
 
 
 # Lataa asennetut asetuslaajennokset.
-for entry_point in _entry_points(group='django.asetukset'):
+for entry_point in entry_points(group='django.asetukset'):
   spec = importlib.util.find_spec(entry_point.value)
   if spec is None:
     entry_point.load()
