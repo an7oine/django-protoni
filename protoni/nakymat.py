@@ -11,6 +11,12 @@ if 'django.contrib.auth' in settings.INSTALLED_APPS:
   class Sisaankirjautumislomake(LoginView.form_class):
     tallenna_istunto = forms.BooleanField(required=False)
   class Sisaankirjautumisnakyma(LoginView):
+    form_class = Sisaankirjautumislomake
+    def get_template_names(self):
+      return (
+        'kirjaudu-sisaan.html',
+        'admin/login.html',  # django.contrib.admin
+      )
     def form_invalid(self, form):
       if referer := self.request.headers.get('Referer'):
         return redirect(referer)
@@ -25,10 +31,11 @@ if 'django.contrib.auth' in settings.INSTALLED_APPS:
     # class Sisaankirjautumisnakyma
   class Kirjautuminen:
     urlpatterns = [
-      path('sisaan/', Sisaankirjautumisnakyma.as_view(
-        form_class=Sisaankirjautumislomake,
-        template_name='kirjaudu-sisaan.html',
-      ), name='kirjaudu-sisaan'),
+      path(
+        'sisaan/',
+        Sisaankirjautumisnakyma.as_view(),
+        name='kirjaudu-sisaan',
+      ),
       path('ulos/', LogoutView.as_view(), name='kirjaudu-ulos'),
     ]
     # class Kirjautuminen
