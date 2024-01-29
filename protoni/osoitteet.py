@@ -33,7 +33,7 @@ urlpatterns = [
 
 
 # Lisää kiinteät näkymät.
-for entry_point in entry_points(group='django.nakymat'):
+for entry_point in _entry_points(group='django.nakymat'):
   try:
     moduuli = entry_point.load()
   except (ImportError, AttributeError):
@@ -46,15 +46,15 @@ for entry_point in entry_points(group='django.nakymat'):
       )
     )
     # else
-  # for entry_point in entry_points
+  # for entry_point in _entry_points
 
 
 # Lisää asennetut osoitteistot.
-for entry_point in entry_points(group='django.osoitteisto'):
+for entry_point in _entry_points(group='django.osoitteisto'):
   urlpatterns.append(
     path(
       entry_point.name + '/',
       include((entry_point.module_name, entry_point.name)),
     )
   )
-  # for entry_point in entry_points
+  # for entry_point in _entry_points

@@ -20,7 +20,7 @@ _entry_points = (
 
 
 _yleinen_osoitteisto = []
-for entry_point in entry_points(group='django.nakymat'):
+for entry_point in _entry_points(group='django.nakymat'):
   try:
     moduuli = entry_point.load()
   except (ImportError, AttributeError):
@@ -30,14 +30,14 @@ for entry_point in entry_points(group='django.nakymat'):
       path(entry_point.name + '/', include(moduuli)),
     )
     # else
-  # for entry_point in entry_points
+  # for entry_point in _entry_points
 
 # Luo projektiosoitteiston (`osoitteet.py`) mukainen oletuspalvelin.
 palvelimet = [
 ]
 
 # Käy kukin rekisteröity palvelinnimiavaruus läpi.
-for entry_point in entry_points(group='django.palvelin'):
+for entry_point in _entry_points(group='django.palvelin'):
   # Poimi palvelimen nimi ja osoitteistomoduuli.
   nimi, moduuli = entry_point.name, entry_point.value
 
@@ -67,7 +67,7 @@ for entry_point in entry_points(group='django.palvelin'):
   # Muodosta `<palvelin>.*`-määritys, joka hakee käyttämänsä
   # osoitteiston edellä asetetusta luettelosta.
   palvelimet.append(host(rf'^(.*[.])?{nimi}[.].*', moduuli, name=nimi))
-  # for entry_point in entry_points
+  # for entry_point in _entry_points
 
 if not any(palvelin.name == '<oletus>' for palvelin in palvelimet):
   palvelimet.append(
