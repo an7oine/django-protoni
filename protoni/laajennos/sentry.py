@@ -11,6 +11,7 @@ import logging
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
+from sentry_sdk.scrubber import EventScrubber, DEFAULT_DENYLIST
 
 # Poimi DSN-yhteysosoite.
 try:
@@ -62,7 +63,18 @@ sentry_sdk.init(
     cast=bool,
     default=False,
   ),
+  event_scrubber=EventScrubber(
+    denylist=[
+      *DEFAULT_DENYLIST,
+      *CONFIG(
+        'SENTRY_DENYLIST',
+        cast=lambda x: filter(None, x.split(',')),
+        default='',
+      ),
+    ],
+  ),
 )
 del logging
 del sentry_sdk, DjangoIntegration, LoggingIntegration
+del EventScrubber, DEFAULT_DENYLIST
 del dsn, versio
