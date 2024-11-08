@@ -37,15 +37,6 @@ finally:
   del paketti
   del PackageNotFoundError, version
 
-# Asetetaan Sentry ohittamaan SSL-varmenteen tarkistus,
-# mikäli tätä vastaava parametri on asetettu.
-if CONFIG('SENTRY_OHITA_VARMENNE', cast=bool, default=False):
-  sentry_sdk.transport.HttpTransport._get_pool_options \
-  = lambda self, ca_certs: {
-    'num_pools': 2,
-    'cert_reqs': 'CERT_NONE',
-  }
-
 # Alusta Sentry-määritys.
 # Ks. https://docs.sentry.io/platforms/python/guides/django/
 sentry_sdk.init(
