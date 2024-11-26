@@ -53,7 +53,13 @@ EMAIL_PORT = CONFIG('EMAIL_PORT', default=25, cast=int)
 try:
   STORAGES
 except NameError:
-  STORAGES = {'staticfiles': {}}
+  STORAGES = {
+    # Vrt. https://docs.djangoproject.com/en/5.1/ref/settings/#storages.
+    'default': {
+      'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {}
+  }
 else:
   STORAGES.setdefault('staticfiles', {})
 STORAGES['staticfiles'].setdefault('BACKEND', (
