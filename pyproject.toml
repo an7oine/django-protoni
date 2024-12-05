@@ -1,2 +1,37 @@
 [build-system]
-requires = ["git-versiointi>=1.6rc3", "setuptools>=42", "wheel"]
+requires = ["git-versiointi>=1.7b1", "setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "django-protoni"
+dynamic = ["version"]
+requires-python = ">= 3.8"
+description = "Django-projektirunko"
+readme = "README.md"
+authors = [
+  {name = "Antti Hautaniemi", email = "antti.hautaniemi@me.com"},
+]
+dependencies = ["Django>=4.2", "python-decouple-multi"]
+
+[project.entry-points."django.asetukset"]
+celery = "protoni.laajennos.celery"
+corsheaders = "protoni.laajennos.corsheaders"
+debug_toolbar = "protoni.laajennos.debug_toolbar"
+dj_database_url = "protoni.laajennos.dj_database_url"
+extensions = "protoni.laajennos.extensions"
+heroku = "protoni.laajennos.heroku"
+hosts = "protoni.laajennos.hosts"
+pipeline = "protoni.laajennos.pipeline"
+sentry = "protoni.laajennos.sentry"
+whitenoise = "protoni.laajennos.whitenoise"
+
+[project.entry-points."django.nakymat"]
+__debug__ = "protoni.nakymat:DebugToolbar"
+kirjaudu = "protoni.nakymat:Kirjautuminen"
+kanta = "protoni.nakymat:Kanta"
+
+[tool.setuptools]
+py-modules = ["manage"]
+script-files = ["manage.py"]
+
+[tool.setuptools.packages.find]
