@@ -8,6 +8,14 @@ import warnings
 
 from decouple_multi import AutoConfig, UndefinedValueError
 
+try:
+  # Alustetaan tuki salatuille asetusparametreille, mikäli tarvittava
+  # paketti (`python-decouple-nacl`) on asennettu.
+  # pylint: disable=unused-import
+  import decouple_nacl
+except ImportError:
+  pass
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

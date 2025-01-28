@@ -30,6 +30,9 @@ __debug__ = "protoni.nakymat:DebugToolbar"
 kirjaudu = "protoni.nakymat:Kirjautuminen"
 kanta = "protoni.nakymat:Kanta"
 
+[project.optional-dependencies]
+salaisuudet = ["python-decouple-nacl"]
+
 [tool.setuptools]
 py-modules = ["manage"]
 script-files = ["manage.py"]
