@@ -1,38 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import importlib
+from importlib.metadata import entry_points
+from importlib.util import find_spec
 import os
 from pathlib import Path
-from sys import version_info
 import warnings
 
 from decouple_multi import AutoConfig, UndefinedValueError
-
-
-# Käytetään yhtenäistä entry_point-toteutusta, vaikka Python 3.9 ja 3.10
-# eroavat tältä osin toisistaan.
-if version_info >= (3, 10):
-  from importlib.metadata import entry_points
-  def ep_hakemisto(ep):
-    # Huomaa, että `entry_point`-standardi ei hyväksy vinoviivoja
-    # osana liitospistettä. Korvataan mahdolliset pisteet viivoilla.
-    return ep.dist.locate_file(ep.value.replace('.', '/'))
-
-else:
-  # Ks. https://docs.python.org/3/library/importlib.metadata.html#entry-points.
-  from importlib.metadata import entry_points as _entry_points
-  def entry_points(*, group):
-    return _entry_points().get(group, ())
-  def ep_hakemisto(ep):
-    from importlib.metadata import distributions
-    ep_value = ep.value.replace('.', '/')
-    for distribution in distributions():
-      if (hakemisto := distribution.locate_file(ep_value)).exists():
-        return hakemisto
-    else:
-      raise ValueError(f'Tiedostoa ei löydetty: {ep.value}')
-
-  # else (Python < 3.10)
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -49,10 +23,8 @@ CONFIG = AutoConfig(
     # Kolmannella sijalla käytetään asennettujen pakettien
     # määrittelemiä `decouple.asetukset`-hakemistoja.
     *(
-      ep_hakemisto(entry_point)
-      for entry_point in entry_points(
-        group='decouple.asetukset'
-      )
+      entry_point.dist.locate_file(entry_point.value.replace('.', '/'))
+      for entry_point in entry_points(group='decouple.asetukset')
     ),
     # Huomaa, että `decouple` käyttää näiden lisäksi viimekätisenä
     # hakemistona käsillä olevan moduulin (__file__) sisältävää polkua.
@@ -278,8 +250,8 @@ for entry_point in entry_points(group='django.sovellus'):
 
 # Lataa asennetut asetuslaajennokset.
 for entry_point in entry_points(group='django.asetukset'):
-  spec = importlib.util.find_spec(entry_point.value)
-  if spec is None:
+  spec = find_spec(entry_point.value)
+  if spec is None or spec.origin is None:
     entry_point.load()
     warnings.warn(f'Virheellinen laajennos: {entry_point!r}')
     continue

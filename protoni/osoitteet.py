@@ -1,19 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from importlib.metadata import entry_points
-from sys import version_info
 
 from django.conf import settings
 from django.urls import path, include
 from django.views.generic import RedirectView
-
-
-_entry_points = (
-  # Ks. https://docs.python.org/3/library/importlib.metadata.html#entry-points.
-  entry_points
-  if version_info >= (3, 10)
-  else lambda *, group: entry_points().get(group, ())
-)
 
 
 class Index(RedirectView):
@@ -33,7 +24,7 @@ urlpatterns = [
 
 
 # Lisää kiinteät näkymät.
-for entry_point in _entry_points(group='django.nakymat'):
+for entry_point in entry_points(group='django.nakymat'):
   try:
     moduuli = entry_point.load()
   except (ImportError, AttributeError):
@@ -46,15 +37,15 @@ for entry_point in _entry_points(group='django.nakymat'):
       )
     )
     # else
-  # for entry_point in _entry_points
+  # for entry_point in entry_points
 
 
 # Lisää asennetut osoitteistot.
-for entry_point in _entry_points(group='django.osoitteisto'):
+for entry_point in entry_points(group='django.osoitteisto'):
   urlpatterns.append(
     path(
       entry_point.name + '/',
       include((entry_point.module_name, entry_point.name)),
     )
   )
-  # for entry_point in _entry_points
+  # for entry_point in entry_points
