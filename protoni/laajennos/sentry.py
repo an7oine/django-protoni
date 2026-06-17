@@ -41,6 +41,7 @@ finally:
 # Ks. https://docs.sentry.io/platforms/python/guides/django/
 sentry_sdk.init(
   dsn=dsn,
+  environment=CONFIG('SENTRY_ENVIRONMENT', default='tuotanto'),
   release=versio,
   integrations=[
     LoggingIntegration(
