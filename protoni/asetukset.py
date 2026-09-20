@@ -83,7 +83,7 @@ except UndefinedValueError:
 else:
   DATABASES['default'].update({
     'django.db.backends.sqlite3': lambda: {
-      'NAME': CONFIG('DB_NAME', default=os.path.join(BASE_DIR, 'db.sqlite3')),
+      'NAME': CONFIG('DB_NAME', 'db.sqlite3'),
     },
     'django.db.backends.mysql': lambda: {
       'HOST': CONFIG('DB_HOST', default='127.0.0.1'),

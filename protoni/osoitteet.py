@@ -45,7 +45,7 @@ for entry_point in entry_points(group='django.osoitteisto'):
   urlpatterns.append(
     path(
       entry_point.name + '/',
-      include((entry_point.module_name, entry_point.name)),
+      include((entry_point.value, entry_point.name)),
     )
   )
   # for entry_point in entry_points
