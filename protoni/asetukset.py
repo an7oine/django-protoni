@@ -8,6 +8,8 @@ import warnings
 
 from decouple_multi import AutoConfig, UndefinedValueError
 
+from django.utils.translation import gettext_lazy as _
+
 try:
   # Alustetaan tuki salatuille asetusparametreille, mikäli tarvittava
   # paketti (`python-decouple-nacl`) on asennettu.
@@ -187,7 +189,26 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 ROOT_URLCONF = 'protoni.osoitteet'
 WSGI_APPLICATION = 'protoni.wsgi.application'
 
-LANGUAGE_CODE = 'fi-fi'
+try:
+  LANGUAGES = CONFIG(
+    'LANGUAGES',
+    cast=lambda x: [
+      (koodi, _(teksti))
+      for koodi, teksti in map(
+        lambda kieli: map(str.strip, kieli.split(':')), x.split(',')
+      )
+    ]
+  )
+except UndefinedValueError:
+  pass
+except ValueError as exc:
+  raise RuntimeError(
+    f'Kielet tulee määritellä seuraavasti: "fi:suomi, sv:ruotsi".'
+    f' Saatiin {CONFIG("LANGUAGES")!r}.'
+  ) from exc
+
+LANGUAGE_CODE = CONFIG('LANGUAGE_CODE', default='fi-fi')
+
 TIME_ZONE = CONFIG('TIME_ZONE', default='UTC')
 USE_I18N = True
 USE_TZ = CONFIG('USE_TZ', cast=bool, default=True)
